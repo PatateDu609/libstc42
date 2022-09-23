@@ -5,7 +5,7 @@ And as the STL, libstc42 is also a header-only library.
 
 ## Getting started
 
-You should clone the repository using the following command:\
+You should clone the repository using the following command:
 
 ```bash
 git clone https://github.com/PatateDu609/libstc42.git
