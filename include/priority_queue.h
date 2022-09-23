@@ -22,10 +22,11 @@
 # error "You must define STC42_PQ_T before including this file."
 #endif
 
-#ifndef STC42_PQ_NAME
+#undef STC42_PQ_NAME
+#ifndef STC42_PQ_PRETTY_NAME
 # define STC42_PQ_NAME STC42_ADD_PREFIX(pq, STC42_PQ_T)
 #else
-# define STC42_PQ_NAME STC42_ADD_PREFIX(pq_, STC42_PQ_NAME)
+# define STC42_PQ_NAME STC42_ADD_PREFIX(pq, STC42_PQ_PRETTY_NAME)
 #endif
 
 #undef STC42_PQ_STRUCT_TYPE
@@ -91,18 +92,14 @@ STC42_PQ_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, internal_heapify)(STC4
  * @brief: Creates a new priority queue.
  * @param: cmp: The comparison function used in the heapify function.
 */
-STC42_PQ_LINKAGE STC42_PQ_STRUCT_TYPE *STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, new)
-	(STC42_MAKE_TYPEDEF_NAME(STC42_PQ_NAME, cmp, _fun) *cmp)
+STC42_PQ_LINKAGE
+STC42_PQ_STRUCT_TYPE *STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, new)(STC42_MAKE_TYPEDEF_NAME(STC42_PQ_NAME, cmp, _fun) *cmp)
 {
 	STC42_PQ_STRUCT_TYPE *pq = (STC42_PQ_STRUCT_TYPE *)malloc(sizeof(STC42_PQ_STRUCT_TYPE));
 	if (!pq)
 		return NULL;
-
+	memset(pq, 0, sizeof *pq);
 	pq->cmp = cmp;
-	pq->free_data = NULL;
-	pq->data = NULL;
-	pq->size = 0;
-
 	return pq;
 }
 
@@ -132,7 +129,7 @@ STC42_PQ_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, free)(STC42_PQ_STRUCT_
 */
 STC42_PQ_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, push)(STC42_PQ_STRUCT_TYPE *pq, STC42_PQ_T data)
 {
-	if (!pq->size)
+	if (!pq->capacity)
 	{
 		pq->capacity = 128;
 		pq->data = (STC42_PQ_T *)calloc(pq->capacity, sizeof(STC42_PQ_T));
@@ -151,9 +148,8 @@ STC42_PQ_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, push)(STC42_PQ_STRUCT_
 			return false;
 		pq->data = tmp;
 	}
-	pq->data[pq->size] = data;
-	pq->size++;
-	for (int i = pq->size / 2 - 1; i >= 0; i--)
+	pq->data[pq->size++] = data;
+	for (long i = pq->size / 2 - 1; i >= 0; i--)
 		STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, internal_heapify)(pq, i);
 	return true;
 }
