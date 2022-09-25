@@ -2,7 +2,7 @@
 #include <criterion/logging.h>
 
 #define STC42_PQ_T int
-#include "priority_queue.h"
+#include "STC42/priority_queue.h"
 
 int intcmp(int a, int b)
 {

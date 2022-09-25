@@ -6,7 +6,8 @@ NAME = test.out
 PATH_OBJ = $(PATH_PREFIX)/obj
 PATH_SRC = $(PATH_PREFIX)/src
 
-SRC_BASENAME = priority_queue.c
+SRC_BASENAME =	priority_queue.c \
+				vector.c
 
 SRC = $(addprefix $(PATH_SRC)/, $(SRC_BASENAME))
 OBJ = $(addprefix $(PATH_OBJ)/, $(SRC_BASENAME:.c=.o))
@@ -14,7 +15,7 @@ DEP = $(addprefix $(PATH_OBJ)/, $(SRC_BASENAME:.c=.d))
 
 ECHO = /bin/echo -e
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -I$(LIB_INCLUDE) -g3 -ggdb
+CFLAGS = -Wall -Werror -Wextra -I$(LIB_INCLUDE) -g3 -ggdb -std=c2x
 LDFLAGS = -lcriterion
 
 $(PATH_OBJ)/%.o: $(PATH_SRC)/%.c
@@ -27,12 +28,12 @@ $(PATH_OBJ)/%.o: $(PATH_SRC)/%.c
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@$(CC) -o $@ $< $(LDFLAGS)
+	@$(CC) -o $@ $(OBJ) $(LDFLAGS)
 
 clean:
 	@rm -f $(OBJ) $(DEP)
 
-fclean:
+fclean: clean
 	@rm -f $(NAME)
 
 re: fclean all

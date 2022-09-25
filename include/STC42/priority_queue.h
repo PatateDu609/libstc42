@@ -7,7 +7,7 @@
  */
 
 #define STC42_INTERNAL 42
-#include "internal/common.h"
+#include "STC42/internal/common.h"
 
 #ifndef STC42_PRIORITY_QUEUE_H
 #define STC42_PRIORITY_QUEUE_H
@@ -36,8 +36,6 @@
 # define STC42_PQ_LINKAGE STC42_DEFAULT_LINKAGE
 #endif
 
-#define make_functionname(name) CAT(STC42_PQ_PREFIX, name)
-
 STC42_MAKE_TYPEDEF_FUN(void, STC42_PQ_NAME, free, STC42_PQ_T);
 STC42_MAKE_TYPEDEF_FUN(int, STC42_PQ_NAME, cmp, const STC42_PQ_T, const STC42_PQ_T);
 
@@ -51,11 +49,11 @@ typedef struct STC42_PQ_STRUCT_TYPE
 	STC42_MAKE_TYPEDEF_NAME(STC42_PQ_NAME, free, _fun) *free_data;
 } STC42_PQ_STRUCT_TYPE;
 
-/*
- * @brief: Swap two elements in the priority queue.
- * @param: a: The first element.
- * @param: b: The second element.
-*/
+/**
+ * @brief Swap two elements in the priority queue.
+ * @param a The first element.
+ * @param b The second element.
+ */
 STC42_PQ_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, internal_swap)(STC42_PQ_T *a, STC42_PQ_T *b)
 {
 	STC42_PQ_T tmp = *a;
@@ -63,11 +61,11 @@ STC42_PQ_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, internal_swap)(STC42_P
 	*b = tmp;
 }
 
-/*
- * @brief: Heapify the priority queue (i.e. make it a heap).
- * @param: pq: The priority queue.
- * @param: i: The index of the element to heapify.
-*/
+/**
+ * @brief Heapify the priority queue (i.e. make it a heap).
+ * @param pq The priority queue.
+ * @param i The index of the element to heapify.
+ */
 STC42_PQ_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, internal_heapify)(STC42_PQ_STRUCT_TYPE *pq, size_t i)
 {
 	if (pq->size <= 1)
@@ -88,10 +86,10 @@ STC42_PQ_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, internal_heapify)(STC4
 	}
 }
 
-/*
- * @brief: Creates a new priority queue.
- * @param: cmp: The comparison function used in the heapify function.
-*/
+/**
+ * @brief Creates a new priority queue.
+ * @param cmp The comparison function used in the heapify function.
+ */
 STC42_PQ_LINKAGE
 STC42_PQ_STRUCT_TYPE *STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, new)(STC42_MAKE_TYPEDEF_NAME(STC42_PQ_NAME, cmp, _fun) *cmp)
 {
@@ -103,10 +101,10 @@ STC42_PQ_STRUCT_TYPE *STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, new)(STC42_MAKE_TYPEDE
 	return pq;
 }
 
-/*
- * @brief: Frees the memory allocated for the priority queue.
- * @param: pq: The priority queue.
-*/
+/**
+ * @brief Frees the memory allocated for the priority queue.
+ * @param pq The priority queue.
+ */
 STC42_PQ_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, free)(STC42_PQ_STRUCT_TYPE *pq)
 {
 	if (!pq)
@@ -121,12 +119,12 @@ STC42_PQ_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, free)(STC42_PQ_STRUCT_
 	free(pq);
 }
 
-/*
- * @brief: Pushes an element to the priority queue.
- * @param: pq: The priority queue.
- * @param: data: The element to push.
- * @return: True if the push was successful, false otherwise.
-*/
+/**
+ * @brief Pushes an element to the priority queue.
+ * @param pq The priority queue.
+ * @param data The element to push.
+ * @return True if the push was successful, false otherwise.
+ */
 STC42_PQ_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, push)(STC42_PQ_STRUCT_TYPE *pq, STC42_PQ_T data)
 {
 	if (!pq->capacity)
@@ -154,12 +152,12 @@ STC42_PQ_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, push)(STC42_PQ_STRUCT_
 	return true;
 }
 
-/*
- * @brief: Pops the top element of the priority queue.
- * @param: pq: The priority queue.
- * @param: ret: The element popped.
- * @return: True if the element was popped, false otherwise.
-*/
+/**
+ * @brief Pops the top element of the priority queue.
+ * @param pq The priority queue.
+ * @param: ret The element popped.
+ * @return True if the element was popped, false otherwise.
+ */
 STC42_PQ_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, pop)(STC42_PQ_STRUCT_TYPE *pq, STC42_PQ_T *ret)
 {
 	if (!pq->size)
@@ -168,7 +166,7 @@ STC42_PQ_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, pop)(STC42_PQ_STRUCT_T
 	*ret = pq->data[0];
 	pq->data[0] = pq->data[pq->size - 1];
 	pq->size--;
-	for (int i = pq->size / 2 - 1; i >= 0; i--)
+	for (int64_t i = (int64_t)(pq->size / 2ul - 1ul); i >= 0; i--)
 		STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, internal_heapify)(pq, i);
 	return true;
 }
@@ -178,9 +176,10 @@ STC42_PQ_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_PQ_NAME, pop)(STC42_PQ_STRUCT_T
 #undef STC42_PQ_PREFIX
 #undef STC42_PQ_T
 #undef STC42_PQ_NAME
+#undef STC42_PQ_PRETTY_NAME
 #undef STC42_PQ_STRUCT_TYPE
 #undef STC42_PQ_LINKAGE
 
-#include "internal/undef.h"
+#include "STC42/internal/undef.h"
 
 #undef STC42_INTERNAL
