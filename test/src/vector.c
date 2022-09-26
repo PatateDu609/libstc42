@@ -1,6 +1,7 @@
 #include <signal.h>
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
+#include <malloc.h>
 
 #define STC42_VEC_T char *
 #define STC42_VEC_PRETTY_NAME str
@@ -79,5 +80,19 @@ Test(vec, pop_back)
 			cr_expect_str_eq(new_last, vec->data[vec->size - 1], "The new last should be %s, not %s", new_last, vec->data[vec->size - 1]);
 	}
 	cr_expect_not(vec_str_pop_back(vec), "pop_back should return false");
+	vec_str_free(vec);
+}
+
+Test(vec, reserve)
+{
+	vec_str_t *vec = vec_str_new();
+
+	cr_assert(vec != NULL, "Vector construction has failed.");
+	cr_expect_not(vec_str_reserve(NULL, 54), "This should return false.");
+
+	cr_expect(vec_str_reserve(vec, 12), "This should return true.");
+	cr_expect_eq(vec->capacity, 12, "The announced capacity should be 12.");
+	cr_expect_geq(malloc_usable_size(vec->data), 12, "We should have a usable size greater than 12.");
+
 	vec_str_free(vec);
 }
