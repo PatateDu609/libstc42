@@ -1,4 +1,3 @@
-#include <signal.h>
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
 #include <malloc.h>
@@ -6,10 +5,6 @@
 #define STC42_VEC_T char *
 #define STC42_VEC_PRETTY_NAME str
 #include "STC42/vector.h"
-
-void destroy_str(char *)
-{
-}
 
 Test(vec, new_free)
 {

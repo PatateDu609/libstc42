@@ -7,7 +7,8 @@ PATH_OBJ = $(PATH_PREFIX)/obj
 PATH_SRC = $(PATH_PREFIX)/src
 
 SRC_BASENAME =	priority_queue.c \
-				vector.c
+				vector.c \
+				list.c
 
 SRC = $(addprefix $(PATH_SRC)/, $(SRC_BASENAME))
 OBJ = $(addprefix $(PATH_OBJ)/, $(SRC_BASENAME:.c=.o))
