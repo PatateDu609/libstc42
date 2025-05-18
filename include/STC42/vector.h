@@ -7,7 +7,7 @@
  */
 
 #define STC42_INTERNAL 42
-#include "internal/common.h"
+#include "internal/template.h"
 
 #ifndef STC42_VEC_H
 #define STC42_VEC_H
@@ -17,37 +17,30 @@
 
 #endif
 
-#ifndef STC42_VEC_T
-#erorr "STC42_VEC_T must be defined."
-#endif
-
-#undef STC42_VEC_NAME
-#ifndef STC42_VEC_PRETTY_NAME
-# define STC42_VEC_NAME STC42_ADD_PREFIX(vec, STC42_VEC_T)
-#else
-# define STC42_VEC_NAME STC42_ADD_PREFIX(vec, STC42_VEC_PRETTY_NAME)
+#if __cplusplus
+extern "C" {
 #endif
 
 #undef STC42_VEC_STRUCT_TYPE
-#define STC42_VEC_STRUCT_TYPE STC42_MAKE_STRUCT_NAME(STC42_VEC_NAME)
+#define STC42_VEC_STRUCT_TYPE STC42_MAKE_STRUCT_NAME(vec, STC42_NAME)
 
 #ifndef STC42_VEC_LINKAGE
 # define STC42_VEC_LINKAGE STC42_DEFAULT_LINKAGE
 #endif
 
 //STC42_MAKE_TYPEDEF_FUN(void, STC42_VEC_NAME, construct, STC42_VEC_T);
-STC42_MAKE_TYPEDEF_FUN(void, STC42_VEC_NAME, destroy, STC42_VEC_T);
+STC42_MAKE_TYPEDEF_FUN(void, vec, STC42_NAME, destroy, STC42_T);
 
 typedef struct STC42_VEC_STRUCT_TYPE
 {
-	STC42_VEC_T *data; ///< Array where the data are stored at.
+	STC42_T *data; ///< Array where the data are stored at.
 	size_t size; ///< The size of the array.
 
 
 	size_t capacity;
 
 	//STC42_MAKE_TYPEDEF_NAME(STC42_VEC_NAME, construct, _fun) *construct_data;
-	STC42_MAKE_TYPEDEF_NAME(STC42_VEC_NAME, destroy, _fun) *destroy_data;
+	STC42_MAKE_TYPEDEF_NAME(vec, STC42_NAME, destroy, _fun) *destroy_data;
 } STC42_VEC_STRUCT_TYPE;
 
 /**
@@ -55,9 +48,9 @@ typedef struct STC42_VEC_STRUCT_TYPE
  *
  * @return A pointer to the new instance.
  */
-STC42_VEC_LINKAGE STC42_VEC_STRUCT_TYPE *STC42_MAKE_FUNC_NAME(STC42_VEC_NAME, new)(void)
+STC42_VEC_LINKAGE STC42_VEC_STRUCT_TYPE *STC42_MAKE_FUNC_NAME(vec, STC42_NAME, new)(void)
 {
-	STC42_VEC_STRUCT_TYPE *vec = malloc(sizeof *vec);
+	STC42_VEC_STRUCT_TYPE *vec = (STC42_VEC_STRUCT_TYPE *)malloc(sizeof *vec);
 
 	if (!vec)
 		return NULL;
@@ -70,7 +63,7 @@ STC42_VEC_LINKAGE STC42_VEC_STRUCT_TYPE *STC42_MAKE_FUNC_NAME(STC42_VEC_NAME, ne
  *
  * @param vec The vector to be freed.
  */
-STC42_VEC_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_VEC_NAME, free)(STC42_VEC_STRUCT_TYPE *vec)
+STC42_VEC_LINKAGE void STC42_MAKE_FUNC_NAME(vec, STC42_NAME, free)(STC42_VEC_STRUCT_TYPE *vec)
 {
 	if (!vec)
 		return;
@@ -89,14 +82,14 @@ STC42_VEC_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_VEC_NAME, free)(STC42_VEC_STRU
  *
  * @return Returns true if the operation succeeded, and it returns false if it fails.
  */
-STC42_VEC_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_VEC_NAME, reserve)(STC42_VEC_STRUCT_TYPE *vec, size_t n)
+STC42_VEC_LINKAGE bool STC42_MAKE_FUNC_NAME(vec, STC42_NAME, reserve)(STC42_VEC_STRUCT_TYPE *vec, size_t n)
 {
 	if (!vec)
 		return false;
 	if (vec->capacity >= n)
 		return true;
 
-	STC42_VEC_T *tmp = malloc(n * sizeof *tmp);
+	STC42_T *tmp = (STC42_T *)malloc(n * sizeof *tmp);
 
 	if (tmp == NULL)
 		return false;
@@ -116,14 +109,14 @@ STC42_VEC_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_VEC_NAME, reserve)(STC42_VEC_S
  *
  * @return Returns true if the operation succeeded, and it returns false if it fails.
  */
-STC42_VEC_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_VEC_NAME, push_back)(STC42_VEC_STRUCT_TYPE *vec, STC42_VEC_T el)
+STC42_VEC_LINKAGE bool STC42_MAKE_FUNC_NAME(vec, STC42_NAME, push_back)(STC42_VEC_STRUCT_TYPE *vec, STC42_T el)
 {
 	if (!vec)
 		return false;
 	if (vec->capacity == 0 || vec->capacity == vec->size)
 	{
 		size_t cap = (vec->capacity == 0) ? 128 : vec->capacity * 2;
-		if (!STC42_MAKE_FUNC_NAME(STC42_VEC_NAME, reserve)(vec, cap))
+		if (!STC42_MAKE_FUNC_NAME(vec, STC42_NAME, reserve)(vec, cap))
 			return false;
 	}
 	vec->data[vec->size++] = el;
@@ -137,7 +130,7 @@ STC42_VEC_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_VEC_NAME, push_back)(STC42_VEC
  *
  * @return Returns True if the operation succeeded or false otherwise.
  */
-STC42_VEC_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_VEC_NAME, pop_back)(STC42_VEC_STRUCT_TYPE *vec)
+STC42_VEC_LINKAGE bool STC42_MAKE_FUNC_NAME(vec, STC42_NAME, pop_back)(STC42_VEC_STRUCT_TYPE *vec)
 {
 	if (!vec)
 		return false;
@@ -151,11 +144,14 @@ STC42_VEC_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_VEC_NAME, pop_back)(STC42_VEC_
 }
 
 #undef STC42_VEC_T
-#undef STC42_VEC_NAME
-#undef STC42_VEC_PRETTY_NAME
+#undef STC42_NAME
 #undef STC42_VEC_STRUCT_TYPE
 #undef STC42_VEC_LINKAGE
 
 #include "STC42/internal/undef.h"
 
 #undef STC42_INTERNAL
+
+#ifdef __cplusplus
+	}
+#endif

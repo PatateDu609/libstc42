@@ -5,8 +5,7 @@
  */
 
 #define STC42_INTERNAL 42
-
-#include "internal/common.h"
+#include "internal/template.h"
 
 #ifndef STC42_LIST_H
 #define STC42_LIST_H
@@ -16,33 +15,22 @@
 
 #endif // STC42_LIST_H
 
-#ifndef STC42_LST_T
-# error "The STC42_LST_T should be defined before including this file."
-#endif
-
-#undef STC42_LST_NAME
-#ifndef STC42_LST_PRETTY_NAME
-# define STC42_LST_NAME STC42_ADD_PREFIX(lst, STC42_LST_T)
-#else
-# define STC42_LST_NAME STC42_ADD_PREFIX(lst, STC42_LST_PRETTY_NAME)
-#endif
-
 #undef STC42_LST_STRUCT_TYPE
-#define STC42_LST_STRUCT_TYPE STC42_MAKE_STRUCT_NAME(STC42_LST_NAME)
+#define STC42_LST_STRUCT_TYPE STC42_MAKE_STRUCT_NAME(lst, STC42_NAME)
 #undef STC42_LST_NODE_TYPE
-#define STC42_LST_NODE_TYPE STC42_MAKE_STRUCT_NAME(STC42_ADD_PREFIX(lst_node, STC42_LST_PRETTY_NAME))
+#define STC42_LST_NODE_TYPE STC42_MAKE_STRUCT_NAME(lst, STC42_ADD_PREFIX(node, STC42_NAME))
 
 #ifndef STC42_LST_LINKAGE
 # define STC42_LST_LINKAGE STC42_DEFAULT_LINKAGE
 #endif
 
-STC42_MAKE_TYPEDEF_FUN(void, STC42_LST_NAME, destroy, STC42_LST_T);
+STC42_MAKE_TYPEDEF_FUN(void, lst, STC42_NAME, destroy, STC42_T);
 
 typedef struct STC42_LST_NODE_TYPE
 {
 	struct STC42_LST_NODE_TYPE *next;
 	struct STC42_LST_NODE_TYPE *prev;
-	STC42_LST_T data;
+	STC42_T data;
 } STC42_LST_NODE_TYPE;
 
 typedef struct STC42_LST_STRUCT_TYPE
@@ -51,7 +39,7 @@ typedef struct STC42_LST_STRUCT_TYPE
 	STC42_LST_NODE_TYPE *end;
 	size_t size;
 
-	STC42_MAKE_TYPEDEF_NAME(STC42_LST_NAME, destroy, _fun) *destroy_data;
+	STC42_MAKE_TYPEDEF_NAME(lst, STC42_NAME, destroy, _fun) *destroy_data;
 } STC42_LST_STRUCT_TYPE;
 
 /**
@@ -59,9 +47,9 @@ typedef struct STC42_LST_STRUCT_TYPE
  *
  * @return A pointer to the new instance.
  */
-STC42_LST_LINKAGE STC42_LST_STRUCT_TYPE *STC42_MAKE_FUNC_NAME(STC42_LST_NAME, new)(void)
+STC42_LST_LINKAGE STC42_LST_STRUCT_TYPE *STC42_MAKE_FUNC_NAME(lst, STC42_NAME, new)(void)
 {
-	STC42_LST_STRUCT_TYPE *lst = malloc(sizeof *lst);
+	STC42_LST_STRUCT_TYPE *lst = (STC42_LST_STRUCT_TYPE *)malloc(sizeof *lst);
 
 	if (!lst)
 		return NULL;
@@ -74,7 +62,7 @@ STC42_LST_LINKAGE STC42_LST_STRUCT_TYPE *STC42_MAKE_FUNC_NAME(STC42_LST_NAME, ne
  *
  * @param lst The list to be freed.
  */
-STC42_LST_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_LST_NAME, free)(STC42_LST_STRUCT_TYPE *lst)
+STC42_LST_LINKAGE void STC42_MAKE_FUNC_NAME(lst, STC42_NAME, free)(STC42_LST_STRUCT_TYPE *lst)
 {
 	if (!lst)
 		return ;
@@ -100,11 +88,11 @@ STC42_LST_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_LST_NAME, free)(STC42_LST_STRU
  *
  * @return True if the operation succeeded, false otherwise.
  */
-STC42_LST_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_LST_NAME, push_back)(STC42_LST_STRUCT_TYPE *lst, STC42_LST_T data)
+STC42_LST_LINKAGE bool STC42_MAKE_FUNC_NAME(lst, STC42_NAME, push_back)(STC42_LST_STRUCT_TYPE *lst, STC42_T data)
 {
 	if (!lst)
 		return false;
-	STC42_LST_NODE_TYPE *node = malloc(sizeof *node);
+	STC42_LST_NODE_TYPE *node = (STC42_LST_NODE_TYPE *)malloc(sizeof *node);
 
 	if (!node)
 		return false;
@@ -128,7 +116,7 @@ STC42_LST_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_LST_NAME, push_back)(STC42_LST
  *
  * @param lst The targeted list.
  */
-STC42_LST_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_LST_NAME, pop_back)(STC42_LST_STRUCT_TYPE *lst)
+STC42_LST_LINKAGE void STC42_MAKE_FUNC_NAME(lst, STC42_NAME, pop_back)(STC42_LST_STRUCT_TYPE *lst)
 {
 	if (!lst)
 		return ;
@@ -159,11 +147,11 @@ STC42_LST_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_LST_NAME, pop_back)(STC42_LST_
  *
  * @return Returns true or false depending on the success or the failure of the operation.
  */
-STC42_LST_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_LST_NAME, push_front)(STC42_LST_STRUCT_TYPE *lst, STC42_LST_T data)
+STC42_LST_LINKAGE bool STC42_MAKE_FUNC_NAME(lst, STC42_NAME, push_front)(STC42_LST_STRUCT_TYPE *lst, STC42_T data)
 {
 	if (!lst)
 		return false;
-	STC42_LST_NODE_TYPE *node = malloc(sizeof *node);
+	STC42_LST_NODE_TYPE *node = (STC42_LST_NODE_TYPE *)malloc(sizeof *node);
 
 	if (!node)
 		return false;
@@ -188,7 +176,7 @@ STC42_LST_LINKAGE bool STC42_MAKE_FUNC_NAME(STC42_LST_NAME, push_front)(STC42_LS
  *
  * @param lst The list.
  */
-STC42_LST_LINKAGE void STC42_MAKE_FUNC_NAME(STC42_LST_NAME, pop_front)(STC42_LST_STRUCT_TYPE *lst)
+STC42_LST_LINKAGE void STC42_MAKE_FUNC_NAME(lst, STC42_NAME, pop_front)(STC42_LST_STRUCT_TYPE *lst)
 {
 	if (!lst)
 		return;
